@@ -1,0 +1,15 @@
+PDF V12 — PONTE ALTERNATIVA DE NOTIFICAÇÕES (EXPERIMENTAL)
+
+Esta pasta é uma alternativa experimental às Firebase Cloud Functions. Ela não está publicada e não envia notificações até ser hospedada e configurada.
+
+IMPORTANTE:
+- O serviço precisa permanecer online para observar Firestore em tempo real.
+- O serviço gratuito do Render pode suspender instâncias por inatividade; por isso, não garante notificações imediatas nem é uma solução confiável para produção no plano gratuito.
+- Configure FIREBASE_SERVICE_ACCOUNT_JSON como variável secreta no servidor, usando a chave JSON de uma conta de serviço do projeto Firebase. NUNCA coloque essa chave no APK, no GitHub público ou compartilhe-a no chat.
+- Use o mesmo projeto Firebase do aplicativo e confirme as permissões mínimas necessárias.
+- As funções originais em /functions continuam no projeto. Não implante a ponte junto com as Cloud Functions originais sem antes desativar uma das rotas, para evitar notificações duplicadas.
+- O serviço depende dos campos users/{uid}.fcmToken, users/{uid}.pushEnabled, conversations/{conversationId}/messages e calls/{callId} conforme o código atual.
+- O servidor ignora o lote inicial de documentos ao iniciar; eventos que ocorram enquanto a instância estiver suspensa podem ser perdidos por esta versão experimental.
+- Não foi possível testar entrega real entre aparelhos neste ambiente. Faça testes com dois celulares e o app fechado antes de confiar nela.
+
+Para hospedar, crie um Web Service no Render apontando para esta pasta, comando de build `npm install` e comando de início `npm start`. Configure a variável secreta acima. Não há garantia de disponibilidade contínua no plano gratuito.
