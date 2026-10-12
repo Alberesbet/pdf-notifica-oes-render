@@ -14,7 +14,7 @@ const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 const db = admin.firestore();
 const messaging = admin.messaging();
-const seen = new Set();
+const inFlight = new Set();
 
 async function sendPrivatePush(uid, kind) {
   if (!uid) return false;
@@ -48,10 +48,16 @@ db.collectionGroup('messages').onSnapshot(async (snapshot) => {
     const isMediaReady = !!m.attachment && m.attachmentPending === false;
     if (!isTextCreated && !isMediaReady) continue;
     const key = 'message:' + doc.ref.path;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    if (await sendPrivatePush(m.recipientUid, 'message')) {
-      await doc.ref.set({ notificationSent: true }, { merge: true });
+    if (inFlight.has(key)) continue;
+    inFlight.add(key);
+    try {
+      if (await sendPrivatePush(m.recipientUid, 'message')) {
+        await doc.ref.set({ notificationSent: true }, { merge: true });
+      }
+    } catch (e) {
+      console.error('Falha ao processar mensagem:', e.code || e.message);
+    } finally {
+      inFlight.delete(key);
     }
   }
 }, (e) => console.error('Listener de mensagens:', e.message));
@@ -65,10 +71,16 @@ db.collection('calls').onSnapshot(async (snapshot) => {
     const c = doc.data();
     if (c.notificationSent === true || c.status !== 'ringing' || !c.calleeUid || !c.offerSdp) continue;
     const key = 'call:' + doc.id;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    if (await sendPrivatePush(c.calleeUid, 'call')) {
-      await doc.ref.set({ notificationSent: true }, { merge: true });
+    if (inFlight.has(key)) continue;
+    inFlight.add(key);
+    try {
+      if (await sendPrivatePush(c.calleeUid, 'call')) {
+        await doc.ref.set({ notificationSent: true }, { merge: true });
+      }
+    } catch (e) {
+      console.error('Falha ao processar chamada:', e.code || e.message);
+    } finally {
+      inFlight.delete(key);
     }
   }
 }, (e) => console.error('Listener de chamadas:', e.message));
