@@ -1,0 +1,13 @@
+PDF V12 — configuração para comunicação entre aparelhos
+
+1. Abra o projeto no Android Studio e aguarde a sincronização do Gradle.
+2. No Firebase Console do projeto pdfapp-bb569, abra Authentication > Sign-in method e habilite Anonymous (Anônimo). O app usa autenticação anônima associada ao cadastro do número.
+3. Em Firestore Database > Rules, publique o conteúdo de firestore.rules que acompanha este projeto.
+4. Não habilite nem contrate Firebase Storage para testar mensagens de texto e chamadas.
+5. Para testar, instale o APK nos dois aparelhos, cadastre um número diferente em cada um, complete o perfil e salve cada número como contato no outro aparelho.
+6. As chamadas pedem microfone; chamadas de vídeo pedem também câmera. Ambos os aparelhos precisam estar online e com o app aberto.
+7. Esta versão divide fotos, vídeos e áudios em blocos no Firestore, para arquivos de até 7 MB por envio. Arquivos maiores continuam privados neste aparelho e não são enviados. Isso usa leituras/escritas do Firestore; não é armazenamento ilimitado.
+8. Depois de publicar as regras, gere um APK novo e instale-o nos DOIS aparelhos. O APK antigo não recebe as alterações feitas no notebook.
+9. O toque de chamada é reproduzido enquanto o PDF está aberto e recebe a chamada. Para tocar com o app totalmente fechado ou em segundo plano de forma confiável, ainda será necessário configurar notificações push (Firebase Cloud Messaging).
+
+Limitação de rede: as chamadas usam servidores STUN públicos; redes móveis ou roteadores com NAT restritivo podem exigir um servidor TURN. As chamadas funcionaram no teste anterior, por isso esta alteração não modifica a tela nem o fluxo WebRTC.

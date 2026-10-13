@@ -1,0 +1,25 @@
+PROJETO PDF — CÓDIGO MODIFICADO (APK AINDA NÃO COMPILADO)
+
+Este pacote contém o código-fonte modificado, incluindo o botão visível “Copiar link do PDF” na tela principal, as correções no fluxo de envio de mensagens que estão no código e o serviço Android de notificações push.
+
+IMPORTANTE: o APK não foi compilado nem testado neste ambiente. Não instale este ZIP como se fosse um APK. O arquivo APK só será produzido depois de uma compilação bem-sucedida.
+
+OPÇÃO A — Android Studio
+1. Extraia o ZIP.
+2. Abra a pasta extraída no Android Studio.
+3. Aguarde o Gradle sincronizar com internet disponível.
+4. Execute Build > Build Bundle(s) / APK(s) > Build APK(s).
+5. O APK debug costuma ficar em app/build/outputs/apk/debug/app-debug.apk.
+
+OPÇÃO B — GitHub Actions
+1. Envie o conteúdo desta pasta para um repositório GitHub seu.
+2. Abra a aba Actions e execute “Compilar APK Android” (ou faça push para main/master).
+3. Aguarde a execução terminar com sucesso.
+4. Baixe o artefato “PDF-debug-apk” no resumo da execução. O artefato fica disponível por 14 dias.
+
+ANTES DE TESTAR mensagens/notificações:
+- As Cloud Functions em functions/index.js precisam ser implantadas no projeto Firebase pdfapp-bb569.
+- No Firestore, app_config/download precisa ter o campo url com uma URL HTTPS real de download.
+- Confira as regras Firestore e aceite a permissão de notificações nos aparelhos.
+
+O workflow compila o APK Android; ele não publica automaticamente o APK em um site nem implanta as Cloud Functions.

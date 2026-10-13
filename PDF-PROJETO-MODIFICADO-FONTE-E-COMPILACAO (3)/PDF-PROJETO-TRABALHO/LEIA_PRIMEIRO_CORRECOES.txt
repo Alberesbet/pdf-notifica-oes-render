@@ -1,0 +1,19 @@
+PDF V12 — LEIA ANTES DE INSTALAR
+
+1. Faça uma cópia do projeto que está funcionando.
+2. Extraia o ZIP e abra a pasta PDF-PROJETO no Android Studio.
+3. Aguarde a sincronização do Gradle.
+4. Use Build > Build Bundle(s) / APK(s) > Build APK(s).
+5. Instale e teste o APK novo nos dois celulares antes de substituir a versão anterior.
+
+Nesta revisão:
+- Perfil: configurações agora permitem editar nome, número e foto.
+- Câmera: o botão ao lado da mensagem abre opções para tirar foto ou gravar vídeo; o menu do clipe não mostra mais “Gravar vídeo”.
+- Vídeo gravado: a câmera é solicitada a gravar em qualidade econômica, até cerca de 6,5 MB e 30 segundos. O transporte atual não aceita arquivos acima de 7 MB.
+- Áudio: balão mais fino e compacto.
+- Notificações: título “Nova notificação”; mensagens/mídias e notificações de chamadas com o som curto padrão de notificação (bip).
+
+IMPORTANTE SOBRE NOTIFICAÇÕES COM O APP FECHADO:
+O código de Cloud Functions em functions/index.js precisa ser implantado no Firebase. Não cole o README nem o código das funções nas regras do Firestore. Consulte README-ATUALIZACOES.md para os passos com Firebase CLI. Sem implantar as funções, o push não funcionará quando o app estiver fechado.
+
+O código ainda precisa ser compilado e testado no Android Studio. Não desinstale a versão atual que funciona antes de validar a nova.
