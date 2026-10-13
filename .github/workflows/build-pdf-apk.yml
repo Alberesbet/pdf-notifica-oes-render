@@ -1,0 +1,45 @@
+name: Gerar APK do PDF
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'PDF-PROJETO-MODIFICADO-FONTE-E-COMPILACAO (3)/**'
+      - '.github/workflows/build-pdf-apk.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Localizar projeto Android
+        id: project
+        shell: bash
+        run: |
+          WRAPPER="$(find . -type f -name gradlew -not -path '*/.gradle/*' | head -n 1)"
+          if [ -z "$WRAPPER" ]; then
+            echo "Não encontrei gradlew no repositório." >&2
+            find . -maxdepth 4 -type f | head -n 100
+            exit 1
+          fi
+          PROJECT_DIR="$(dirname "$WRAPPER")"
+          echo "dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+          chmod +x "$WRAPPER"
+          echo "Projeto localizado em: $PROJECT_DIR"
+      - name: Compilar APK debug
+        working-directory: ${{ steps.project.outputs.dir }}
+        run: ./gradlew --no-daemon assembleDebug
+      - name: Publicar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF-APK-debug
+          path: '**/build/outputs/apk/debug/*.apk'
+          if-no-files-found: error
+          retention-days: 14
