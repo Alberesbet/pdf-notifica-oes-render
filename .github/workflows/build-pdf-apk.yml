@@ -38,6 +38,13 @@ jobs:
           chmod +x "$WRAPPER"
           echo "Projeto localizado em: $PROJECT_DIR"
           ls -la "$PROJECT_DIR"
+      - name: Verificar Gradle Wrapper
+        working-directory: ${{ steps.project.outputs.dir }}
+        shell: bash
+        run: |
+          test -s gradle/wrapper/gradle-wrapper.properties
+          grep -q '^distributionUrl=' gradle/wrapper/gradle-wrapper.properties
+          echo "Gradle Wrapper configurado."
       - name: Compilar APK debug
         working-directory: ${{ steps.project.outputs.dir }}
         shell: bash
